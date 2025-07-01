@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATC Simulator — 3D Radar View</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <!-- Top Bar -->
+    <header id="topbar">
+        <div class="topbar-left">
+            <h1>ATC Simulator</h1>
+            <span id="sim-status" class="status-badge stopped">STOPPED</span>
+        </div>
+        <div class="topbar-center">
+            <span id="sim-time">T+0:00:00</span>
+            <span id="tick-counter">Tick: 0</span>
+        </div>
+        <div class="topbar-right">
+            <button id="btn-start" class="btn btn-start">Start</button>
+            <button id="btn-stop" class="btn btn-stop" disabled>Stop</button>
+            <span id="ws-indicator" class="ws-dot disconnected" title="WebSocket"></span>
+        </div>
+    </header>
+
+    <!-- Main Layout -->
+    <div id="main-container">
+        <!-- 3D Radar View -->
+        <div id="radar-container">
+            <canvas id="radar-canvas"></canvas>
+            <!-- Aircraft info tooltip -->
+            <div id="aircraft-tooltip" class="tooltip hidden">
+                <div class="tooltip-header">
+                    <span id="tt-callsign"></span>
+                    <span id="tt-type"></span>
+                </div>
+                <div class="tooltip-body">
+                    <div><label>ALT:</label> <span id="tt-altitude"></span></div>
+                    <div><label>SPD:</label> <span id="tt-speed"></span></div>
+                    <div><label>HDG:</label> <span id="tt-heading"></span></div>
+                    <div><label>STS:</label> <span id="tt-status"></span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Side Panel -->
+        <aside id="side-panel">
+            <!-- Stats Cards -->
+            <section class="panel-section">
+                <h2>Statistics</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-value" id="stat-aircraft">0</span>
+                        <span class="stat-label">Aircraft</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value" id="stat-conflicts">0</span>
+                        <span class="stat-label">Conflicts</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value" id="stat-holding">0</span>
+                        <span class="stat-label">Holding</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value" id="stat-approach">0</span>
+                        <span class="stat-label">Approach</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value" id="stat-landed">0</span>
+                        <span class="stat-label">Landed</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value" id="stat-diverted">0</span>
+                        <span class="stat-label">Diverted</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Aircraft List -->
+            <section class="panel-section">
+                <h2>Aircraft <span id="aircraft-count-badge" class="count-badge">0</span></h2>
+                <div id="aircraft-list" class="scrollable-list">
+                    <!-- Populated by JS -->
+                </div>
+            </section>
+
+            <!-- View Controls -->
+            <section class="panel-section">
+                <h2>View</h2>
+                <div class="control-group">
+                    <label for="altitude-filter">Min Altitude (ft)</label>
+                    <input type="range" id="altitude-filter" min="0" max="45000" value="0" step="1000">
+                    <span id="altitude-filter-value">0</span>
+                </div>
+                <div class="control-group">
+                    <label>
+                        <input type="checkbox" id="show-labels" checked>
+                        Show Labels
+                    </label>
+                </div>
+                <div class="control-group">
+                    <label>
+                        <input type="checkbox" id="show-trails" checked>
+                        Show Trails
+                    </label>
+                </div>
+                <div class="control-group">
+                    <label>
+                        <input type="checkbox" id="show-conflicts">
+                        Highlight Conflicts
+                    </label>
+                </div>
+                <button id="btn-reset-camera" class="btn btn-secondary">Reset Camera</button>
+            </section>
+        </aside>
+    </div>
+
+    <!-- CDN Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/msgpack-lite@0.1.26/dist/msgpack.min.js"></script>
+
+    <!-- App Scripts -->
+    <script src="/js/websocket.js"></script>
+    <script src="/js/scene.js"></script>
+    <script src="/js/app.js"></script>
+</body>
+</html>
